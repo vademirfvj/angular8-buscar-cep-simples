@@ -11,7 +11,7 @@ import { AppService } from './app.service';
 export class AppComponent implements OnInit {
   title = 'Consultar CEP';
 
-  private cep: number;
+  public cep: number;
   endereco: Endereco;
 
 
