@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "busca-cep": {
+    "angular8-buscar-cep-simples": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/busca-cep",
+            "outputPath": "dist/angular8-buscar-cep-simples",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -67,18 +67,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "busca-cep:build"
+            "browserTarget": "angular8-buscar-cep-simples:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "busca-cep:build:production"
+              "browserTarget": "angular8-buscar-cep-simples:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "busca-cep:build"
+            "browserTarget": "angular8-buscar-cep-simples:build"
           }
         },
         "test": {
@@ -118,15 +118,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "busca-cep:serve"
+            "devServerTarget": "angular8-buscar-cep-simples:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "busca-cep:serve:production"
+              "devServerTarget": "angular8-buscar-cep-simples:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "busca-cep"
+  "defaultProject": "angular8-buscar-cep-simples"
 }
