@@ -16,4 +16,17 @@ export class AppService {
     return this.http.get(`https://viacep.com.br/ws/${cep}/json/`);
   }
 
+  getUFList(): Observable<any> {
+    return this.http.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados`)
+  }
+
+  getCidadeList(uf: string): Observable<any> {
+    return this.http.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/distritos`);
+  }
+
+  getEnderecoList(uf: string, localidade: string, logradouro: string ): Observable<any> {
+    return this.http.get(`https://viacep.com.br/ws/${uf}/${localidade}/${logradouro}/json/`);
+  }
+
+
 }

@@ -9,19 +9,82 @@
 <div class="container">
   <br>
   <h2 style="text-align: center;">{{title}}</h2>
-  <hr>  
-  <div class="card">
+  <hr>
+
+ <div class="form-group row">
+    <label class="col-md-3 col-form-label" for="inline-radios">Buscar Por: </label>
+    <div class="col-md-9 col-form-label">
+      <div class="form-check form-check-inline mr-1" id="inline-radios">
+        <input class="form-check-input" type="radio" name="inline-radios" id="inlineRadio1" value="option1" (change)="changeTipo(1)" checked="true">
+        <label class="form-check-label" for="inlineRadio1">CEP</label>
+      </div>
+      <div class="form-check form-check-inline mr-1">
+        <input class="form-check-input" type="radio" name="inline-radios" id="inlineRadio2" value="option2" (change)="changeTipo(2)">
+        <label class="form-check-label" for="inlineRadio2">Logradouro</label>
+      </div>
+    </div>
+  </div>
+
+ <div class="card" *ngIf="cepDiv">
+    <div class="card-header">
+      <strong>Pesquisa por CEP</strong>
+    </div>
     <div class="card-body">
-      <form (ngSubmit)="onSubmit()">
+      <form (ngSubmit)="onSubmit()" #cepForm="ngForm">
         <div class="form-group row">
-          <label class="col-sm-5 col-form-label" for="cep-input">Informar CEP: </label>
+          <label class="col-sm-5 col-form-label" for="cep-input">Informe o CEP: </label>
           <div class="col-sm-6">
-            <input [(ngModel)]="cep" type="text" id="cep-input" name="cep-input" ngModel maxlength="8" class="form-control" placeholder="Somente número">
+            <input [(ngModel)]="cep" type="text" id="cep-input" name="cep-input" ngModel maxlength="8" minlength="8" class="form-control" placeholder="Somente número" required>
           </div>
+        </div>
+        <div class="card-footer">
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="cepForm.invalid">
+            <i class="fa fa-dot-circle-o"></i> Buscar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="cidadeDiv">
+    <div class="card-header">
+      <strong>Pesquisa por Logradouro</strong>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="onSubmit()" #cidadeForm="ngForm">
+        <div class="card-body">
+          <div class="row">
+            <div class="form-group col-sm-4">
+              <label for="uf">UF *</label>
+              <select class="form-control" id="uf" (change)="setCidade($event.target.value)"
+                      name="uf" [(ngModel)]="uf" required>
+                <option>Selecione</option>
+                <option *ngFor="let uf of ufs" value= {{uf.sigla}}>
+                  {{uf.sigla}}
+                </option>
+              </select>
+            </div>
+            <div class="form-group col-sm-4">
+              <label for="cidadeSelect">Cidade *</label>
+              <select class="form-control" id="cidade" name="cidade" [(ngModel)]="cidade" ngModel required>
+                <option>Selecione</option>
+                <option *ngFor="let cidade of cidades" value= {{cidade.nome}}>
+                  {{cidade.nome}}
+                </option>
+              </select>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="rua">Rua *</label>
+                <input type="text" class="form-control" [(ngModel)]="rua" id="rua" name="rua" 
+                placeholder="valor mínimo de 3 caracteres" ngModel minlength="3" required>
+              </div>
+            </div>
+          </div><!--/.row-->
         </div>
 
         <div class="card-footer">
-          <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Submit</button>
+          <button type="submit" class="btn btn-sm btn-primary"  [disabled]="cidadeForm.invalid">
+            <i class="fa fa-dot-circle-o"></i> Buscar</button>
         </div>
       </form>
     </div>
@@ -29,7 +92,7 @@
 
   <br><br>
 
-  <div class="card">
+  <div class="card" *ngIf="cepDiv">
     <div class="card-header">
       <strong>Endereço </strong>
     </div>
@@ -61,6 +124,41 @@
         </div>
       </form>
     </div>
+  </div>
+
+  <br><br>
+
+  <div class="row" *ngIf="cidadeDiv">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> <strong>Endereços</strong>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered table-striped table-sm">
+            <thead>
+              <tr>
+                <th>CEP</th>
+                <th>Rua</th>
+                <th>Bairro</th>
+                <th>Cidade</th>
+                <th>UF</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let endereco of enderecos">
+                        <td>{{endereco.cep}}</td>
+                        <td>{{endereco.logradouro}}</td>
+                        <td>{{endereco.bairro}}</td>
+                        <td>{{endereco.localidade}}</td>
+                        <td>{{endereco.uf}}</td>
+               </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
   </div>
 
 </div>
