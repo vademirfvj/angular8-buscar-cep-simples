@@ -29,7 +29,9 @@ export class AppComponent implements OnInit {
    ngOnInit() {
     this.cepDiv = true;
    	this.endereco = new Endereco();
-    this.appService.getUFList().subscribe((data:Uf[]) => {this.ufs = data}, (err) => { console.log(err)});
+    this.appService.getUFList().subscribe((data:Uf[]) => 
+        {this.ufs = data ; this.ufs.sort((a,b)=> a.sigla.localeCompare(b.sigla))}, 
+          (err) => { console.log(err)});
    }
 
 
@@ -39,7 +41,9 @@ export class AppComponent implements OnInit {
        console.log("Consulta: Cidade: " + this.cidade + " UF: " + this.uf + " Rua: " + this.rua);
 
         this.appService.getEnderecoList(this.uf, this.cidade.replace(" ", "%20"), this.rua)
-          .subscribe((data:Endereco[]) => {this.enderecos = data}, (err) => { console.log(err)});
+          .subscribe((data:Endereco[]) => 
+             {this.enderecos = data; ; this.enderecos.sort((a,b)=> a.logradouro.localeCompare(b.logradouro))}, 
+               (err) => { console.log(err)});
 
      }else{
        this.endereco = new Endereco();
@@ -64,7 +68,9 @@ export class AppComponent implements OnInit {
     console.log(uf)
 
     this.appService.getCidadeList(uf)
-      .subscribe((data:Cidade[]) => {this.cidades = data}, error => console.log(error));
+      .subscribe((data:Cidade[]) => 
+        {this.cidades = data; this.cidades.sort((a,b)=> a.nome.localeCompare(b.nome))},
+         error => console.log(error));
   }
 
   buscarCEP(){
