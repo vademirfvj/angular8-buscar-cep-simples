@@ -1,12 +1,30 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, SecurityContext, ViewEncapsulation } from '@angular/core';
 import { Endereco } from './endereco';
 import { Uf } from './uf';
 import { Cidade } from './cidade';
 import { AppService } from './app.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { AlertConfig } from 'ngx-bootstrap/alert';
+
+export function getAlertConfig(): AlertConfig {
+  return Object.assign(new AlertConfig(), { type: 'success' });
+}
+
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
+  encapsulation: ViewEncapsulation.None,
+  styles: [
+    `
+  .alert-md-local {
+    background-color: #009688;
+    border-color: #00695C;
+    color: #fff;
+  }
+  `
+  ],
+  providers: [{ provide: AlertConfig, useFactory: getAlertConfig }]
 })
 export class AppComponent implements OnInit {
   title = 'Consultar CEP';
@@ -19,12 +37,18 @@ export class AppComponent implements OnInit {
   public cepDiv: boolean;
   public cidadeDiv: boolean;
 
+  public ruaInvalid: boolean;
+
   ufs: Uf[];
   cidades: Cidade[];
   enderecos: Endereco[];
+  msg_erro;
+
+  error_consult_cep = 'Não foi encontrado endereço para o CEP: %';
+  error_consult_city = 'Não foi encontrado endereço para a rua: %';
 
 
-   constructor(private appService: AppService){  }
+   constructor(private appService: AppService, sanitizer: DomSanitizer){  }
 
    ngOnInit() {
     this.cepDiv = true;
@@ -38,11 +62,17 @@ export class AppComponent implements OnInit {
    onSubmit() {
      if(this.cidadeDiv === true){
        this.enderecos = [];
+       this.ruaInvalid = false;
        console.log("Consulta: Cidade: " + this.cidade + " UF: " + this.uf + " Rua: " + this.rua);
 
         this.appService.getEnderecoList(this.uf, this.cidade.replace(" ", "%20"), this.rua)
-          .subscribe((data:Endereco[]) => 
-             {this.enderecos = data; ; this.enderecos.sort((a,b)=> a.logradouro.localeCompare(b.logradouro))}, 
+          .subscribe((data:Endereco[]) =>  
+             { console.log(data) ; 
+                 if(data.length === 0){ 
+                     this.msg_erro = this.error_consult_city.replace("%",""+this.rua);
+                     this.ruaInvalid = true;
+                   }; 
+               this.enderecos = data; this.enderecos.sort((a,b)=> a.logradouro.localeCompare(b.logradouro))}, 
                (err) => { console.log(err)});
 
      }else{
@@ -80,6 +110,11 @@ export class AppComponent implements OnInit {
       .subscribe(data => {
         console.log(data)
         this.endereco = data;
+          if(this.endereco.erro === true){
+            this.msg_erro = this.error_consult_cep.replace("%",""+this.cep);
+          }
       }, error => console.log(error));
   }
+
+
 }
