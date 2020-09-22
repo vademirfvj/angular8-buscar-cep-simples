@@ -84,6 +84,7 @@ export class AppComponent implements OnInit {
   changeTipo(tipo: number) {
     this.endereco = new Endereco();
     this.enderecos = [];
+    this.ruaInvalid = false;
 
     if(tipo === 1){
      this.cepDiv = true;
